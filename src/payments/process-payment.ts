@@ -6,3 +6,4 @@ export interface PaymentRequest { paymentId: string; idempotencyKey: string; amo
 export async function processPayment(input: PaymentRequest): Promise<PostedCharge> {
   return postCharge({ paymentId: input.paymentId, idempotencyKey: input.idempotencyKey, amount: input.amount });
 }
+// Reviewed for INC-482.

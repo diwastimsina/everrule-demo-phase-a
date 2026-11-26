@@ -1,0 +1,105 @@
+{
+  "id": "ER-INC-483",
+  "test": {
+    "path": "test/payments/everrule/ER-INC-483.test.ts",
+    "runner": "vitest",
+    "sha256": "bcfb3a4568bee29714b6711a132c640213a779a57ce138f13a6bee1425ab29ef",
+    "required": true
+  },
+  "scope": {
+    "paths": [
+      "src/payments/**",
+      "src/idempotency/**"
+    ],
+    "dependencies": []
+  },
+  "schema": "everrule-contract/v1",
+  "version": 1,
+  "approval": {
+    "status": "approved",
+    "rationale": "Fixed commit",
+    "approved_at": "2026-11-26T22:09:01.368Z",
+    "approver_name": "Diwas Timsina",
+    "approver_role": "Payments service owner",
+    "contract_hash": "226a6af7c249ef7a875b29ae52bd363dcc34bdf22042f831a105053945301cc3"
+  },
+  "behavior": {
+    "inputs": {
+      "request_type": "payment_request",
+      "identity_type": "payment_idempotency_key"
+    },
+    "profile": {
+      "id": "duplicate_side_effect.sequential",
+      "version": 1
+    },
+    "execution": {
+      "ordering": "sequential",
+      "isolation": "fresh_scenario_state",
+      "completion": "await_each_invocation",
+      "effects_visibility": "immediate_on_completion",
+      "side_effect_environment": "test_only"
+    },
+    "operation": "payments.process",
+    "observation": {
+      "concept": "payments.posted_charge",
+      "measure": "successful_effect_count",
+      "correlation": "same_request_identity"
+    },
+    "expectations": {
+      "first_outcome": "success",
+      "repeat_outcome": "success",
+      "after_first_invocation": 1,
+      "after_repeat_invocation": 1
+    },
+    "preconditions": {
+      "request_is_valid": true,
+      "initial_successful_effect_count": 0
+    }
+  },
+  "incident": {
+    "id": "INC-483",
+    "title": "Retry charged the customer twice while the retry flag was on",
+    "severity": "SEV-1",
+    "occurred_at": "2026-09-18T16:42:00Z"
+  },
+  "loopholes": [
+    {
+      "id": "immediate_retry",
+      "title": "Immediate retry",
+      "result": "holds"
+    },
+    {
+      "id": "changed_payload",
+      "title": "Same key, changed payload",
+      "result": "holds"
+    },
+    {
+      "id": "concurrent_retry",
+      "note": "Needs a serialized map or a database constraint; decide at approval.",
+      "title": "Concurrent retry",
+      "result": "owner_decides"
+    }
+  ],
+  "ownership": {
+    "review_due": "2027-04-04",
+    "accountable_team": "payments-platform"
+  },
+  "resolution": {
+    "kind": "outside_repository",
+    "note": "The retry flag was turned off in production"
+  },
+  "requirement": {
+    "statement": "A retry must never create a second posted charge for the same idempotency key.",
+    "assumptions": [
+      "The idempotency key is supplied by the caller and is stable across retries."
+    ]
+  },
+  "verification": {
+    "mode": "reproduced",
+    "broken_result": "fail",
+    "reproduced_at": "2026-11-26T22:06:13.045Z",
+    "broken_revision": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2"
+  },
+  "failure_class": "duplicate_side_effect",
+  "hash_algorithm": "sha256"
+}

@@ -1,0 +1,130 @@
+{
+  "id": "ER-INC-482",
+  "test": {
+    "path": "test/payments/everrule/ER-INC-482.test.ts",
+    "runner": "vitest",
+    "sha256": "75e6a961784d6b656988408e63ff07ff673db0a3999d4e211e45acf4ae3488db",
+    "required": true
+  },
+  "scope": {
+    "paths": [
+      "src/payments/**",
+      "src/idempotency/**"
+    ],
+    "dependencies": []
+  },
+  "schema": "everrule-contract/v1",
+  "version": 1,
+  "approval": {
+    "status": "approved",
+    "rationale": "The fix is verified on all four",
+    "approved_at": "2026-11-26T21:10:22.480Z",
+    "approver_name": "Alex Morgan",
+    "approver_role": "Payments lead",
+    "contract_hash": "aea32721ae97efe1585ac81924225fbb160141b85136c42c15632f2211240a3e"
+  },
+  "behavior": {
+    "inputs": {
+      "request_type": "payment_request",
+      "identity_type": "payment_idempotency_key"
+    },
+    "profile": {
+      "id": "duplicate_side_effect.sequential",
+      "version": 1
+    },
+    "execution": {
+      "ordering": "sequential",
+      "isolation": "fresh_scenario_state",
+      "completion": "await_each_invocation",
+      "effects_visibility": "immediate_on_completion",
+      "side_effect_environment": "test_only"
+    },
+    "operation": "payments.process",
+    "observation": {
+      "concept": "payments.posted_charge",
+      "measure": "successful_effect_count",
+      "correlation": "same_request_identity"
+    },
+    "expectations": {
+      "first_outcome": "success",
+      "repeat_outcome": "success",
+      "after_first_invocation": 1,
+      "after_repeat_invocation": 1
+    },
+    "preconditions": {
+      "request_is_valid": true,
+      "initial_successful_effect_count": 0
+    }
+  },
+  "incident": {
+    "id": "INC-482",
+    "title": "Retry charged the customer twice after a timeout",
+    "severity": "SEV-1",
+    "occurred_at": "2026-09-18T16:42:00Z"
+  },
+  "loopholes": [
+    {
+      "id": "immediate_retry",
+      "title": "Immediate retry",
+      "result": "holds"
+    },
+    {
+      "id": "changed_payload",
+      "title": "Same key, changed payload",
+      "result": "holds"
+    },
+    {
+      "id": "concurrent_retry",
+      "note": "Needs a serialized map or a database constraint; decide at approval.",
+      "title": "Concurrent retry",
+      "result": "owner_decides"
+    }
+  ],
+  "ownership": {
+    "review_due": "2027-04-04",
+    "accountable_team": "payments-platform"
+  },
+  "resolution": {
+    "kind": "repository",
+    "revision": "39d4e83d4f8aa33f99be563bd49711cac32d6f1a"
+  },
+  "requirement": {
+    "statement": "A retry must never create a second posted charge for the same idempotency key.",
+    "assumptions": [
+      "The idempotency key is supplied by the caller and is stable across retries."
+    ]
+  },
+  "verification": {
+    "mode": "exact",
+    "dimensions": {
+      "behavior": {
+        "detail": "the test's runs at 39d4e83: PASS, PASS, PASS.",
+        "result": "pass"
+      },
+      "integrity": {
+        "detail": "candidate, contract, case set, bindings, protocol and revisions match.",
+        "result": "pass"
+      },
+      "regression_safety": {
+        "detail": "1 check from the repository's own CI passed on 39d4e83, including the 1 the default branch requires.",
+        "result": "pass"
+      },
+      "incident_resolution": {
+        "detail": "fails at 7cd3747 (BEHAVIORAL_ASSERTION_FAILURE at repeat_count (expected 1, actual 2)) and no longer fails at 39d4e83.",
+        "result": "pass"
+      }
+    },
+    "verified_at": "2026-11-26T21:03:33.641Z",
+    "fixed_result": "pass",
+    "broken_result": "fail",
+    "intent_digest": "sha256:43398014a3666c9fc7f1aa6b01062ddb5a440fa07f357a616f6d50b600a5e9c5",
+    "fixed_revision": "39d4e83d4f8aa33f99be563bd49711cac32d6f1a",
+    "broken_revision": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
+    "case_set_digest": "sha256:2378d94614a69f7853092863902f68be1935b44c37ae97687b34882405709a23",
+    "candidate_digest": "sha256:d8e13b886bbfaa368f1cc1759443691a9deca265ec179d0554f9ba68e6f04fd2",
+    "binding_set_digest": "sha256:c4cc0cb853f5940bc98000c7d1f49dfd88f00fe006bf15200ef8b165a2f4da21",
+    "verification_protocol_version": "historical-sequential-v2"
+  },
+  "failure_class": "duplicate_side_effect",
+  "hash_algorithm": "sha256"
+}

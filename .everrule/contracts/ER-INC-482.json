@@ -64,7 +64,7 @@
   },
   "verification_target": {
     "base": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
-    "merge": "99887491445bcf0f8901db1a86e7057d2bdb60fd"
+    "merge": "39d4e83d4f8aa33f99be563bd49711cac32d6f1a"
   },
   "loopholes": [
     {

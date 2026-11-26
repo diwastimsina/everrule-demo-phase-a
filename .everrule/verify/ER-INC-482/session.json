@@ -7,7 +7,7 @@
   "binding_set_digest": "sha256:c4cc0cb853f5940bc98000c7d1f49dfd88f00fe006bf15200ef8b165a2f4da21",
   "verification_protocol_version": "historical-sequential-v2",
   "broken_sha": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
-  "fixed_sha": "99887491445bcf0f8901db1a86e7057d2bdb60fd",
+  "fixed_sha": "39d4e83d4f8aa33f99be563bd49711cac32d6f1a",
   "approved_runner_identity": "vitest",
   "execution_spec_digest": "sha256:7bc5e908ecbc3657f065b0bb9d9f12d9db4479d9617431cd3976afd5bb8600a8"
 }

@@ -1,0 +1,12 @@
+{
+  "verification_session_id": "ER-V-INC-483-1",
+  "candidate_digest": "sha256:1f4ddd495049681949f22fc89c91c1e2f1d37a0e04b0a3f41c6c26a8fd6c9b9e",
+  "candidate_artifact_digest": "sha256:bcfb3a4568bee29714b6711a132c640213a779a57ce138f13a6bee1425ab29ef",
+  "contract_digest": "sha256:ed15cc8063cf0d349f6578701cf29e7f98f10e1c71a5f2cfa925c1f729b19868",
+  "case_set_digest": "sha256:2378d94614a69f7853092863902f68be1935b44c37ae97687b34882405709a23",
+  "binding_set_digest": "sha256:5d9ebf9936480bedd2ef508c63bd5b8bf4ff6d2aa1a68eaf8ffea01819012491",
+  "verification_protocol_version": "historical-sequential-v2",
+  "broken_sha": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
+  "approved_runner_identity": "vitest",
+  "execution_spec_digest": "sha256:7bc5e908ecbc3657f065b0bb9d9f12d9db4479d9617431cd3976afd5bb8600a8"
+}

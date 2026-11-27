@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "candidate_id": "ER-CAND-INC-484-2",
+  "candidate_digest": "sha256:872dd0bfecce2535da3b0596608c397fb9f5e6c0cdb1c2b057cc7f50e76b1575",
+  "protection_origin": "INCIDENT_DERIVED",
+  "references": {
+    "contract_digest": "sha256:7a4eaf67a1adfd73ff35ad25ac1c10ffb44114a22a94efdd184bde0dc9a81f24",
+    "case_set_digest": "sha256:2378d94614a69f7853092863902f68be1935b44c37ae97687b34882405709a23",
+    "binding_set_digest": "sha256:9174c5180e5b93e5023864bccc7e50d3b4b082f1d2644e8888b21db5f5b94b64",
+    "intent_digest": "sha256:60152c092ed4efad691ba0c60d041022dfd0e00f29dd9ad074292a1288f0c820",
+    "repository_snapshot_sha": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
+    "synthesis_policy_version": "vitest-renderer-1",
+    "static_validation_policy_version": "1"
+  },
+  "artifact": {
+    "path": "test/payments/everrule/ER-INC-484.test.ts",
+    "digest": "sha256:eaed16d34c3df39e2b7c2fc9701f139ca0d4f32230ad27452e46111b29ce244b",
+    "only_allowed_new_file": true
+  },
+  "assertion_map": {
+    "first_count": "test/payments/everrule/ER-INC-484.test.ts:21",
+    "repeat_count": "test/payments/everrule/ER-INC-484.test.ts:24",
+    "initial_count": "test/payments/everrule/ER-INC-484.test.ts:18"
+  }
+}

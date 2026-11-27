@@ -1,0 +1,93 @@
+{
+  "schema": "everrule-contract/v1",
+  "hash_algorithm": "sha256",
+  "id": "ER-INC-484",
+  "version": 1,
+  "incident": {
+    "id": "INC-484",
+    "title": "A retried payment posted a second charge",
+    "occurred_at": "2026-09-18T16:42:00Z",
+    "severity": "SEV-1"
+  },
+  "failure_class": "duplicate_side_effect",
+  "behavior": {
+    "profile": {
+      "id": "duplicate_side_effect.sequential",
+      "version": 1
+    },
+    "operation": "payments.process",
+    "inputs": {
+      "request_type": "payment_request",
+      "identity_type": "payment_idempotency_key"
+    },
+    "preconditions": {
+      "request_is_valid": true,
+      "initial_successful_effect_count": 0
+    },
+    "observation": {
+      "concept": "payments.posted_charge",
+      "measure": "successful_effect_count",
+      "correlation": "same_request_identity"
+    },
+    "expectations": {
+      "after_first_invocation": 1,
+      "after_repeat_invocation": 1,
+      "first_outcome": "success",
+      "repeat_outcome": "success"
+    },
+    "execution": {
+      "ordering": "sequential",
+      "completion": "await_each_invocation",
+      "isolation": "fresh_scenario_state",
+      "effects_visibility": "immediate_on_completion",
+      "side_effect_environment": "test_only"
+    }
+  },
+  "requirement": {
+    "statement": "A retry must never create a second posted charge for the same idempotency key.",
+    "assumptions": [
+      "The idempotency key is supplied by the caller and is stable across retries."
+    ]
+  },
+  "scope": {
+    "paths": [
+      "src/payments/**",
+      "src/idempotency/**"
+    ],
+    "dependencies": []
+  },
+  "test": {
+    "path": "test/payments/everrule/ER-INC-484.test.ts",
+    "runner": "vitest",
+    "required": true,
+    "sha256": "eaed16d34c3df39e2b7c2fc9701f139ca0d4f32230ad27452e46111b29ce244b"
+  },
+  "verification_target": {
+    "base": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2"
+  },
+  "loopholes": [
+    {
+      "id": "immediate_retry",
+      "title": "Immediate retry",
+      "result": "holds"
+    },
+    {
+      "id": "changed_payload",
+      "title": "Same key, changed payload",
+      "result": "holds"
+    },
+    {
+      "id": "concurrent_retry",
+      "title": "Concurrent retry",
+      "result": "owner_decides",
+      "note": "Needs a serialized map or a database constraint; decide at approval."
+    }
+  ],
+  "approval": {
+    "status": "draft"
+  },
+  "ownership": {
+    "accountable_team": "payments-platform",
+    "review_due": "2027-04-04"
+  }
+}

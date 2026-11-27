@@ -1,0 +1,130 @@
+{
+  "id": "ER-INC-484",
+  "test": {
+    "path": "test/payments/everrule/ER-INC-484.test.ts",
+    "runner": "vitest",
+    "sha256": "eaed16d34c3df39e2b7c2fc9701f139ca0d4f32230ad27452e46111b29ce244b",
+    "required": true
+  },
+  "scope": {
+    "paths": [
+      "src/payments/**",
+      "src/idempotency/**"
+    ],
+    "dependencies": []
+  },
+  "schema": "everrule-contract/v1",
+  "version": 1,
+  "approval": {
+    "status": "approved",
+    "rationale": "I have added the fix",
+    "approved_at": "2026-11-27T20:43:27.262Z",
+    "approver_name": "Diwas Timsina",
+    "approver_role": "Payment Lead",
+    "contract_hash": "946cb867917313e6318c13e7e9ee2a89d4f2ccf31fce44ea2dc3bf16f9f0576e"
+  },
+  "behavior": {
+    "inputs": {
+      "request_type": "payment_request",
+      "identity_type": "payment_idempotency_key"
+    },
+    "profile": {
+      "id": "duplicate_side_effect.sequential",
+      "version": 1
+    },
+    "execution": {
+      "ordering": "sequential",
+      "isolation": "fresh_scenario_state",
+      "completion": "await_each_invocation",
+      "effects_visibility": "immediate_on_completion",
+      "side_effect_environment": "test_only"
+    },
+    "operation": "payments.process",
+    "observation": {
+      "concept": "payments.posted_charge",
+      "measure": "successful_effect_count",
+      "correlation": "same_request_identity"
+    },
+    "expectations": {
+      "first_outcome": "success",
+      "repeat_outcome": "success",
+      "after_first_invocation": 1,
+      "after_repeat_invocation": 1
+    },
+    "preconditions": {
+      "request_is_valid": true,
+      "initial_successful_effect_count": 0
+    }
+  },
+  "incident": {
+    "id": "INC-484",
+    "title": "A retried payment posted a second charge",
+    "severity": "SEV-1",
+    "occurred_at": "2026-09-18T16:42:00Z"
+  },
+  "loopholes": [
+    {
+      "id": "immediate_retry",
+      "title": "Immediate retry",
+      "result": "holds"
+    },
+    {
+      "id": "changed_payload",
+      "title": "Same key, changed payload",
+      "result": "holds"
+    },
+    {
+      "id": "concurrent_retry",
+      "note": "Needs a serialized map or a database constraint; decide at approval.",
+      "title": "Concurrent retry",
+      "result": "owner_decides"
+    }
+  ],
+  "ownership": {
+    "review_due": "2027-04-04",
+    "accountable_team": "payments-platform"
+  },
+  "resolution": {
+    "kind": "repository",
+    "revision": "69af0248ed91409a302516c52a1c4c6d9840afbd"
+  },
+  "requirement": {
+    "statement": "A retry must never create a second posted charge for the same idempotency key.",
+    "assumptions": [
+      "The idempotency key is supplied by the caller and is stable across retries."
+    ]
+  },
+  "verification": {
+    "mode": "exact",
+    "dimensions": {
+      "behavior": {
+        "detail": "the test's runs at 69af024: PASS, PASS, PASS.",
+        "result": "pass"
+      },
+      "integrity": {
+        "detail": "candidate, contract, case set, bindings, protocol and revisions match.",
+        "result": "pass"
+      },
+      "regression_safety": {
+        "detail": "1 check from the repository's own CI passed on 69af024, including the 1 the default branch requires.",
+        "result": "pass"
+      },
+      "incident_resolution": {
+        "detail": "fails at 7cd3747 (BEHAVIORAL_ASSERTION_FAILURE at repeat_count (expected 1, actual 2)) and no longer fails at 69af024.",
+        "result": "pass"
+      }
+    },
+    "verified_at": "2026-11-27T20:41:56.477Z",
+    "fixed_result": "pass",
+    "broken_result": "fail",
+    "intent_digest": "sha256:60152c092ed4efad691ba0c60d041022dfd0e00f29dd9ad074292a1288f0c820",
+    "fixed_revision": "69af0248ed91409a302516c52a1c4c6d9840afbd",
+    "broken_revision": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
+    "case_set_digest": "sha256:2378d94614a69f7853092863902f68be1935b44c37ae97687b34882405709a23",
+    "candidate_digest": "sha256:872dd0bfecce2535da3b0596608c397fb9f5e6c0cdb1c2b057cc7f50e76b1575",
+    "binding_set_digest": "sha256:9174c5180e5b93e5023864bccc7e50d3b4b082f1d2644e8888b21db5f5b94b64",
+    "verification_protocol_version": "historical-sequential-v2"
+  },
+  "failure_class": "duplicate_side_effect",
+  "hash_algorithm": "sha256"
+}

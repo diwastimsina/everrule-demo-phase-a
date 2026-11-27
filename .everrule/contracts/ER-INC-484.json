@@ -63,7 +63,8 @@
     "sha256": "eaed16d34c3df39e2b7c2fc9701f139ca0d4f32230ad27452e46111b29ce244b"
   },
   "verification_target": {
-    "base": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2"
+    "base": "7cd374731bce9d728a834a7ea6f78e3c19c7bfc2",
+    "merge": "69af0248ed91409a302516c52a1c4c6d9840afbd"
   },
   "loopholes": [
     {
